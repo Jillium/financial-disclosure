@@ -3,11 +3,12 @@ let db;
 // establish connection to IndexDb database, we will call 'budget-tracker' and it will be version 1
 const request = indexedDB.open('budget-tracker', 1);
 
+
 request.onupgradeneeded = function(event) {
-    // save a reference to the database
+   
     const db = event.target.result;
-    // create an object store(table) called 'new_transaction' 
-    db.createobjectStore('new_transaction', { autoIncrement: true });
+    
+    db.createObjectStore('new_transaction', { autoIncrement: true });
 };
 
 // upon successful request
