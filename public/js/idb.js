@@ -1,45 +1,47 @@
 // variable to hold indexDb connection
 let db;
 // establish connection to IndexDb database, we will call 'budget-tracker' and it will be version 1
-const request = indexedDB.open('budget-tracker', 1);
+const request = indexedDB.open('budget_tracker', 1);
 
 
+// this event will emit if the database version changes (nonexistant to version 1, v1 to v2, etc.)
 request.onupgradeneeded = function(event) {
-   
+    // save a reference to the database 
     const db = event.target.result;
-    
+    // create an object store (table) called `new_transaction`, set it to have an auto incrementing primary key of sorts 
     db.createObjectStore('new_transaction', { autoIncrement: true });
-};
+  };
 
-// upon successful request
+// upon a successful 
 request.onsuccess = function(event) {
-    // when db is successfully created with its object store 
+    // when db is successfully created with its object store (from onupgradedneeded event above) or simply established a connection, save reference to db in global variable
     db = event.target.result;
-
-    // check if app is online, if yes run sendTransaction()
+  
     if (navigator.onLine) {
-        uploadTransaction();
+      
+      uploadTransaction();
     }
-};
-
-request.onerror = function(event) {
+  };
+  
+  request.onerror = function(event) {
+    // log error here
     console.log(event.target.errorCode);
-};
+  };
 
 function saveRecord(record) {
     const transaction = db.transaction(['new_transaction'], 'readwrite');
 
-    const transactionObjectStore = transaction.objectStore('new_transaction');
+    const trackerObjectStore = transaction.objectStore('new_transaction');
 
-    transactionObjectStore.add(record);
+    trackerObjectStore.add(record);
 };
 
 function uploadTransaction() {
     const transaction = db.transaction(['new_transaction'], 'readwrite');
 
-    const transactionObjectStore = transaction.objectStore('new_transaction');
+    const trackerObjectStore = transaction.objectStore('new_transaction');
 
-    const getAll = transactionObjectStore.getAll();
+    const getAll = trackerObjectStore.getAll();
 
     getAll.onsuccess = function() {
         if (getAll.result.length > 0) {
@@ -59,9 +61,9 @@ function uploadTransaction() {
 
                 const transaction = db.transaction(['new_transaction'], 'readwrite');
 
-                const transactionObjectStore = transaction.objectStore('new_transaction');
+                const trackerObjectStore = tracker.objectStore('new_transaction');
 
-                transactionObjectStore.clear();
+                trackerObjectStore.clear();
 
                 alert('All saved transactions have been submitted!');
             })
