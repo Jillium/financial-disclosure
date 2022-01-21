@@ -17,7 +17,7 @@ request.onsuccess = function(event) {
     db = event.target.result;
 
     // check if app is online, if yes run sendTransaction()
-    if (navigator.online) {
+    if (navigator.onLine) {
         uploadTransaction();
     }
 };
