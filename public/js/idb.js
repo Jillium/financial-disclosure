@@ -61,7 +61,7 @@ function uploadTransaction() {
 
                 const transaction = db.transaction(['new_transaction'], 'readwrite');
 
-                const trackerObjectStore = tracker.objectStore('new_transaction');
+                const trackerObjectStore = transaction.objectStore('new_transaction');
 
                 trackerObjectStore.clear();
 
